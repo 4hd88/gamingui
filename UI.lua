@@ -2,7 +2,7 @@
 -- Version: 3.2
 
 -- Instances:
-
+print("UI")
 local skidbidi = Instance.new("ScreenGui")
 local main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")

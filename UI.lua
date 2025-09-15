@@ -2,7 +2,9 @@
 -- Version: 3.2
 
 -- Instances:
-print("UI")
+
+info("Loaded ARCTIC UI")
+
 local skidbidi = Instance.new("ScreenGui")
 local main = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -39,6 +41,7 @@ local backroundshadow = Instance.new("ImageLabel")
 skidbidi.Name = "skidbidi"
 skidbidi.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 skidbidi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+skidbidi.ResetOnSpawn = false
 
 main.Name = "main"
 main.Parent = skidbidi
@@ -370,289 +373,84 @@ backroundshadow.SliceCenter = Rect.new(49, 49, 450, 450)
 
 -- Scripts:
 
-local function IBDWF_fake_script() -- close.LocalScript 
-	local script = Instance.new('LocalScript', close)
+local player = game.Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui"):WaitForChild("skidbidi")
 
-	script.Parent.MouseButton1Down:Connect(function()
-		script.Parent.Parent.Parent.Visible = false
-	end)
+local main = gui:WaitForChild("main")
+local editorframe = main:WaitForChild("editorframe")
+local source = editorframe:WaitForChild("source")
+local lines = editorframe:WaitForChild("lines")
+
+local exe = main:WaitForChild("exe")
+local clr = main:WaitForChild("clr")
+local sh = main:WaitForChild("sh")
+local close = main:WaitForChild("close")
+
+close.MouseButton1Down:Connect(function()
+	main.Visible = false
+end)
+
+exe.MouseButton1Down:Connect(function()
+	loadstring(source.Text)()
+end)
+
+clr.MouseButton1Down:Connect(function()
+	source.TextColor3 = Color3.fromRGB(10, 58, 116)
+	source.TextSize = 18
+	source.Text = "Cleared"
+	task.wait(0.3)
+	source.TextColor3 = Color3.fromRGB(204, 204, 204)
+	source.TextSize = 15
+	source.Text = ""
+end)
+
+sh.MouseButton1Down:Connect(function()
+	print("ScriptHub")
+end)
+
+local UIS = game:GetService("UserInputService")
+local dragToggle, dragStart, startPos
+local dragSpeed = 0.25
+
+local function updateInput(input)
+	local delta = input.Position - dragStart
+	local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+		startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	game:GetService("TweenService"):Create(main, TweenInfo.new(dragSpeed), {Position = position}):Play()
 end
-coroutine.wrap(IBDWF_fake_script)()
-local function GKPV_fake_script() -- exe.exeS 
-	local script = Instance.new('LocalScript', exe)
 
-	local player = game.Players.LocalPlayer
-	local textbox = player:WaitForChild("PlayerGui"):WaitForChild("skidbidi").main.editorframe.source
-	local button = script.Parent
-	
-	button.MouseButton1Down:Connect(function()
-		loadstring(textbox.Text)()
-	end)
-	
-end
-coroutine.wrap(GKPV_fake_script)()
-local function JKAD_fake_script() -- clr.clrS 
-	local script = Instance.new('LocalScript', clr)
-
-	local player = game.Players.LocalPlayer
-	local textbox = player:WaitForChild("PlayerGui"):WaitForChild("skidbidi").main.editorframe.source
-	local button = script.Parent
-	
-	local color = Color3.fromRGB(204, 204, 204)
-	local clearColor = Color3.fromRGB(10, 58, 116)
-	
-	local size = 15
-	local clearSize = 18
-	
-	button.MouseButton1Down:Connect(function()
-		textbox.TextColor3 = clearColor
-		textbox.TextSize = clearSize
-		textbox.Text = "Cleared"
-		task.wait(0.3)
-		textbox.TextColor3 = color
-		textbox.TextSize = size
-		textbox.Text = ""
-	end)
-	
-end
-coroutine.wrap(JKAD_fake_script)()
-local function DMOID_fake_script() -- sh.shS 
-	local script = Instance.new('LocalScript', sh)
-
-	local player = game.Players.LocalPlayer
-	local textbox = player:WaitForChild("PlayerGui"):WaitForChild("skidbidi").main.editorframe.source
-	local button = script.Parent
-	
-	button.MouseButton1Down:Connect(function()
-		print("ScriptHub")
-	end)
-	
-end
-coroutine.wrap(DMOID_fake_script)()
-local function WYMYS_fake_script() -- editorframe.lineandhighlight 
-	local script = Instance.new('LocalScript', editorframe)
-
-	
-	local lua_keywords = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while", "is_synapse_function","is_protosmasher_caller", "execute","foreach","foreachi","insert","syn","HttpGet","HttpPost","__index","__namecall","__add","__call","__tostring","__tonumber","__div"}
-	local global_env = {"getrawmetatable", "game", "workspace", "script", "math", "string", "table", "print", "wait", "BrickColor", "Color3", "next", "pairs", "ipairs", "select", "unpack", "Instance", "Vector2", "Vector3", "CFrame", "Ray", "UDim2", "Enum", "assert", "error", "warn", "tick", "loadstring", "_G", "shared", "getfenv", "setfenv", "newproxy", "setmetatable", "getmetatable", "os", "debug", "pcall", "ypcall", "xpcall", "rawequal", "rawset", "rawget", "tonumber", "tostring", "type", "typeof", "_VERSION", "coroutine", "delay", "require", "spawn", "LoadLibrary", "settings", "stats", "time", "UserSettings", "version", "Axes", "ColorSequence", "Faces", "ColorSequenceKeypoint", "NumberRange", "NumberSequence", "NumberSequenceKeypoint", "gcinfo", "elapsedTime", "collectgarbage", "PhysicalProperties", "Rect", "Region3", "Region3int16", "UDim", "Vector2int16", "Vector3int16","run_secure_function","create_secure_function","hookfunc","hookfunction","newcclosure","replaceclosure","islclosure","getgc","gcinfo","rconsolewarn","rconsoleprint","rconsoleinfo","rconsoleinput","rconsoleinputasync","rconsoleclear","rconsoleerr",}
-	
-	local Source = script.Parent.source
-	local Lines = script.Parent.lines
-	local src = Source
-	local lin = Lines
-	
-	local Highlight = function(string, keywords)
-		local K = {}
-		local S = string
-		local Token =
-			{
-				["="] = true,
-				["."] = true,
-				[","] = true,
-				["("] = true,
-				[")"] = true,
-				["["] = true,
-				["]"] = true,
-				["{"] = true,
-				["}"] = true,
-				[":"] = true,
-				["*"] = true,
-				["/"] = true,
-				["+"] = true,
-				["-"] = true,
-				["%"] = true,
-				[";"] = true,
-				["~"] = true
-			}
-		for i, v in pairs(keywords) do
-			K[v] = true
-		end
-		S = S:gsub(".", function(c)
-			if Token[c] ~= nil then
-				return "\32"
-			else
-				return c
+main.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragToggle = true
+		dragStart = input.Position
+		startPos = main.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragToggle = false
 			end
 		end)
-		S = S:gsub("%S+", function(c)
-			if K[c] ~= nil then
-				return c
-			else
-				return (" "):rep(#c)
-			end
-		end)
-	
-		return S
 	end
-	
-	local hTokens = function(string)
-		local Token =
-			{
-				["="] = true,
-				["."] = true,
-				[","] = true,
-				["("] = true,
-				[")"] = true,
-				["["] = true,
-				["]"] = true,
-				["{"] = true,
-				["}"] = true,
-				[":"] = true,
-				["*"] = true,
-				["/"] = true,
-				["+"] = true,
-				["-"] = true,
-				["%"] = true,
-				[";"] = true,
-				["~"] = true
-			}
-		local A = ""
-		local B = [[]]
-		string:gsub(".", function(c)
-			if Token[c] ~= nil then
-				A = A .. c
-			elseif c == "\n" then
-				A = A .. "\n"
-			elseif c == "\t" then
-				A = A .. "\t"
-			else
-				A = A .. "\32"
-			end
-		end)
-		return A
-	end
-	
-	
-	local strings = function(string)
-		local highlight = ""
-		local quote = false
-		string:gsub(".", function(c)
-			if quote == false and c == "\"" then
-				quote = true
-			elseif quote == true and c == "\"" then
-				quote = false
-			end
-			if quote == false and c == "\"" then
-				highlight = highlight .. "\""
-			elseif c == "\n" then
-				highlight = highlight .. "\n"
-			elseif c == "\t" then
-				highlight = highlight .. "\t"
-			elseif quote == true then
-				highlight = highlight .. c
-			elseif quote == false then
-				highlight = highlight .. "\32"
-			end
-		end)
-	
-		return highlight
-	end
-	
-	local comments = function(string)
-		local ret = ""
-		string:gsub("[^\r\n]+", function(c)
-			local comm = false
-			local i = 0
-			c:gsub(".", function(n)
-				i = i + 1
-				if c:sub(i, i + 1) == "--" then
-					comm = true
-				end
-				if comm == true then
-					ret = ret .. n
-				else
-					ret = ret .. "\32"
-				end
-			end)
-			ret = ret
-		end)
-	
-		return ret
-	end
-	
-	local highlight_source = function(type)
-		if type == "Text" then
-			src.Text = Source.Text:gsub("\13", "")
-			src.Text = Source.Text:gsub("\t", "      ")
-			local s = src.Text
-			src.Keywords_.Text = Highlight(s, lua_keywords)
-			src.Globals_.Text = Highlight(s, global_env)
-			src.RemoteHighlight_.Text = Highlight(s, {"FireServer", "fireServer", "InvokeServer", "invokeServer"})
-			src.Tokens_.Text = hTokens(s)
-			src.Strings_.Text = strings(s)
-			local lin = 1
-			s:gsub("\n", function()
-				lin = lin + 1
-			end)
-			Lines.Text = ""
-			for i = 1, lin do
-				Lines.Text = Lines.Text .. i .. "\n"
-			end
-		end
-	end
-	
-	highlight_source("Text")
-	
-	src.Changed:Connect(highlight_source)
-end
-coroutine.wrap(WYMYS_fake_script)()
-local function PSSANQ_fake_script() -- main.DragScript 
-	local script = Instance.new('LocalScript', main)
+end)
 
-	local UIS = game:GetService('UserInputService')
-	local frame = script.Parent
-	local dragToggle = nil
-	local dragSpeed = 0.25
-	local dragStart = nil
-	local startPos = nil
-	
-	local function updateInput(input)
-		local delta = input.Position - dragStart
-		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-		game:GetService('TweenService'):Create(frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+UIS.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		if dragToggle then
+			updateInput(input)
+		end
 	end
-	
-	frame.InputBegan:Connect(function(input)
-		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then 
-			dragToggle = true
-			dragStart = input.Position
-			startPos = frame.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragToggle = false
-				end
-			end)
-		end
-	end)
-	
-	UIS.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			if dragToggle then
-				updateInput(input)
-			end
-		end
-	end)
-	
-end
-coroutine.wrap(PSSANQ_fake_script)()
-local function NDBSDE_fake_script() -- main.ShowHide 
-	local script = Instance.new('LocalScript', main)
+end)
 
-	local fr = script.Parent
-	local UserInputService = game:GetService("UserInputService")
-	
-	UserInputService.InputBegan:Connect(function(input, gameProcessed)
-		if not gameProcessed and input.KeyCode == Enum.KeyCode.Insert then
-			fr.Visible = not fr.Visible
-		end
-	end)
-	
-	game:GetService("StarterGui"):SetCore("SendNotification", {
-		Title = "Key: Insert",
-		Text = "to hide and show GUI",
-		Duration = 1,
-	})
-	
-end
-coroutine.wrap(NDBSDE_fake_script)()
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if not gameProcessed and input.KeyCode == Enum.KeyCode.Insert then
+		main.Visible = not main.Visible
+	end
+end)
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Key: Insert",
+	Text = "to hide and show GUI",
+	Duration = 1,
+})
+

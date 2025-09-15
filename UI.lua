@@ -374,17 +374,7 @@ backroundshadow.SliceCenter = Rect.new(49, 49, 450, 450)
 -- Scripts:
 
 local player = game.Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui"):WaitForChild("skidbidi")
-
-local main = gui:WaitForChild("main")
-local editorframe = main:WaitForChild("editorframe")
-local source = editorframe:WaitForChild("source")
-local lines = editorframe:WaitForChild("lines")
-
-local exe = main:WaitForChild("exe")
-local clr = main:WaitForChild("clr")
-local sh = main:WaitForChild("sh")
-local close = main:WaitForChild("close")
+local gui = skidbidi
 
 close.MouseButton1Down:Connect(function()
 	main.Visible = false
